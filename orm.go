@@ -601,7 +601,7 @@ func (s *DbRecorder) scanFields(ar Record) {
 	s.fields = make([]*field, 0)
 	for i := 0; i < count; i++ {
 		f := t.Field(i)
-		if f.Type.Kind() == reflect.Struct {
+		if f.Type.Kind() == reflect.Struct && f.Type.Name() != "Time" {
 			keys, fields := s.getFields(f.Type)
 
 			s.key = append(s.key, keys...)

@@ -62,6 +62,20 @@ func (t *Time) UnmarshalJSON(data []byte) (err error) {
 	}
 }
 
+func (t *Time) GetDate() string {
+	if t.Valid {
+		return t.Time.Format(DateLayout)
+	}
+	return ""
+}
+
+func (t *Time) GetDateTime() string {
+	if t.Valid {
+		return t.Time.Format(DatetimeLayout)
+	}
+	return ""
+}
+
 // Strings support []string
 type Strings []string
 
