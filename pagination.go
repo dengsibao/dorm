@@ -4,7 +4,7 @@ import (
 	"github.com/Masterminds/squirrel"
 )
 
-var defaultPageSize = uint64(100)
+var defaultPageSize = uint64(20)
 var defaultCurrent = uint64(1)
 
 type Pagination struct {
