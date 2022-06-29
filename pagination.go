@@ -14,7 +14,7 @@ type Pagination struct {
 }
 
 func (p *Pagination) current() uint64 {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return defaultCurrent
 	}
 	var cur = &defaultCurrent
@@ -26,7 +26,7 @@ func (p *Pagination) current() uint64 {
 
 //每页显示的数量
 func (p *Pagination) limit() uint64 {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return defaultPageSize
 	}
 	var ps = &defaultPageSize
@@ -38,14 +38,14 @@ func (p *Pagination) limit() uint64 {
 
 //跳过的数量
 func (p *Pagination) offset() uint64 {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return 0
 	}
 	return (p.current() - 1) * p.limit()
 }
 
 func (p *Pagination) Limit(q squirrel.SelectBuilder) squirrel.SelectBuilder {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return q
 	}
 	if p.required() {
@@ -55,7 +55,7 @@ func (p *Pagination) Limit(q squirrel.SelectBuilder) squirrel.SelectBuilder {
 }
 
 func (p *Pagination) GetDefault(total int64) *Pagination {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return &Pagination{Current: &defaultCurrent, PageSize: &defaultPageSize, Total: &total}
 	}
 
@@ -65,8 +65,16 @@ func (p *Pagination) GetDefault(total int64) *Pagination {
 }
 
 func (p *Pagination) required() bool {
-	if p == nil {
+	if p.PageSize == nil || p.Current == nil {
 		return false
 	}
-	return p.Current != nil && p.PageSize != nil && *p.Current > 0 && *p.PageSize > 0
+	return *p.Current > 0 && *p.PageSize > 0
+}
+
+func (p *Pagination) OrDefault() *Pagination {
+	if p.PageSize == nil || p.Current == nil {
+		return &Pagination{Current: &defaultCurrent, PageSize: &defaultPageSize}
+	}
+
+	return &Pagination{Current: p.Current, PageSize: p.PageSize}
 }
